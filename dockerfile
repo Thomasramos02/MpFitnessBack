@@ -1,16 +1,14 @@
 FROM ubuntu:latest as build
 
-run apt-get update
-run apt-get install openjdk-17-jdk maven -y
-copy . .
+RUN apt-get update && apt-get install openjdk-21-jdk maven -y
+COPY . .
 
-run apt-get install maven -y
-run mvn clean install
+RUN mvn clean install
 
-from openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 
-expose 8080
+EXPOSE 8080
 
-copy --from=build /target/MpFitnessBack-0.0.1-SNAPSHOT.jar MpFitnessBack-0.0.1-SNAPSHOT.jar
+COPY --from=build /target/MpFitnessBack-0.0.1-SNAPSHOT.jar MpFitnessBack-0.0.1-SNAPSHOT.jar
 
-entrypoint ["java","-jar","/MpFitnessBack-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/MpFitnessBack-0.0.1-SNAPSHOT.jar"]
