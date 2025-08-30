@@ -1,16 +1,35 @@
-FROM ubuntu:latest as build
+###########################
+# Build da aplicação
+###########################
+FROM ubuntu:latest AS build
 
-run apt-get update
-run apt-get install openjdk-17-jdk maven -y
-copy . .
+# Instalar Java 17 e Maven
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk maven && \
+    apt-get clean
 
-run apt-get install maven -y
-run mvn clean install
+# Diretório de trabalho
+WORKDIR /app
 
-from openjdk:17-jdk-slim
+# Copiar todo o código
+COPY . .
 
-expose 8080
+# Build do projeto
+RUN mvn clean package -DskipTests
 
-copy --from=build /target/MpFitnessBack-0.0.1-SNAPSHOT.jar MpFitnessBack-0.0.1-SNAPSHOT.jar
+###########################
+# Imagem final
+###########################
+FROM openjdk:17-jdk-slim
 
-entrypoint ["java","-jar","/MpFitnessBack-0.0.1-SNAPSHOT.jar"]
+# Diretório de trabalho
+WORKDIR /app
+
+# Expor porta
+EXPOSE 8080
+
+# Copiar o JAR do build anterior
+COPY --from=build /app/target/MpFitnessBack-0.0.1-SNAPSHOT.jar MpFitnessBack-0.0.1-SNAPSHOT.jar
+
+# Comando de inicialização
+ENTRYPOINT ["java", "-jar", "MpFitnessBack-0.0.1-SNAPSHOT.jar"]
