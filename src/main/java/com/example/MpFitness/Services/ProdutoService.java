@@ -24,7 +24,7 @@ public class ProdutoService {
     @Autowired
     private CarrinhoRepository carrinhoRepository;
     
-    @Value("${app.upload.dir}")
+    @Value("${file.upload-dir}")
     private String uploadDir; // pasta absoluta
 
     @Autowired
@@ -202,3 +202,4 @@ public class ProdutoService {
         return produtoRepository.findByCategoriaAndStatus(categoria, "ATIVO");
     }
 }
+
