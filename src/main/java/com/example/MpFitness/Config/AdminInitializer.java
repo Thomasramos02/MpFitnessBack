@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Profile("prod") // 🔒 garante que só roda no profile de PRODUÇÃO
+//@Profile("prod") 
 public class AdminInitializer implements CommandLineRunner {
 
     private final ClienteRepository clienteRepository;
