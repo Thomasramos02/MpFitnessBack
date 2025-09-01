@@ -99,6 +99,7 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://127.0.0.1:3000",
                 "http://localhost:5173",
+                "https://mp-fitness-front.vercel.app",
                 frontendUrl 
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
@@ -118,3 +119,4 @@ public class SecurityConfig {
     }
 
 }
+
