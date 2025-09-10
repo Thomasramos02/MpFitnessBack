@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/api/produtos/**",
-                                "/uploads/**")
+                                "/uploads/**",
+                                "/ping")
                         .permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/clientes/*/carrinho/**")).authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/api/pedidos/cliente/**"))
