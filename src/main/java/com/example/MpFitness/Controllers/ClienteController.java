@@ -85,7 +85,7 @@ public class ClienteController {
         return ResponseEntity.ok(enderecoDTO);
     }
 
-    @PutMapping("/atualizar")
+    @PutMapping("/atualizar") 
     public ResponseEntity<?> atualizar(@RequestHeader("Authorization") String token,
             @RequestBody Cliente clienteAtualizado) {
         String tokenLimpo = token.startsWith("Bearer ") ? token.substring(7) : token;
@@ -96,6 +96,11 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
 
+        /* Este método poderia ser criado na services, deixando a controller chamando esse método na service e lidando com requisições HTTP.   
+         * Um dos beneficios dessa mudança é que a lógica de negócio fica toda na services, deixando a controller mais limpa e focada em lidar com requisições HTTP.
+         * Outro benefício é que facilita a reutilização do código, caso outras partes da aplicação precise de um método de atualizar o cliente em outro contexto que não seja nessa controller.
+        */
+        
         clienteExistente.setNome(clienteAtualizado.getNome());
         clienteExistente.setEmail(clienteAtualizado.getEmail());
         clienteExistente.setEndereco(clienteAtualizado.getEndereco());
@@ -111,9 +116,12 @@ public class ClienteController {
         String tokenLimpo = token.startsWith("Bearer ") ? token.substring(7) : token;
         Long userId = jwtUtils.extractId(tokenLimpo);
         Cliente clienteExistente = clienteService.findById(userId);
-
+        /* Assim como o método atualizar, esse método poderia ser criado na services, deixando a controller chamando esse método na service e lidando com requisições HTTP. 
+         * 
+         * 
+         */
         if (clienteExistente == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); 
         }
 
         clienteRepository.delete(clienteExistente);

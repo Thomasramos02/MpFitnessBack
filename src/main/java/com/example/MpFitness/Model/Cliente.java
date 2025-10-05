@@ -51,5 +51,7 @@ public class Cliente {
     public enum Role {
         ADMIN,
         CLIENTE
+
+        /* Seria bom criar uma classe so para Enum já que se você precisar citar novamente a Role em outra parte do projeto você não precisa duplicar o Enum. Outro exemplo é se você criasse um novo tipo de role no projeto por exemplo CLIENTE_VIP você alteraria apenas a classe Enum facilitando a manunteção */
     }
 }

@@ -61,6 +61,13 @@ public class ProdutoController {
                 "Snacks",
                 "Geral");
         return ResponseEntity.ok(categorias);
+
+        /* Uma boa prática seria deixar este método na services, para manter toda a lógica de negócios em apenas um lugar já que se precisar de listar as categorias em outra parte do código você poderia chamar ele na services e assim evitando a cópia do mesmo código de forma desnecessária um exemplo para chamar na controller seria colocar esse método na sua services tirando apenas o "return ResponseEntity.ok(categorias)" e colocando esse no lugar por exemplo: @GetMapping("/categorias")
+        public ResponseEntity<List<String>> getCategorias() {
+        List<String> categorias = produtoService.getCategorias();
+        return ResponseEntity.ok(categorias);
+}
+ */
     }
 
     // Busca produtos por categoria

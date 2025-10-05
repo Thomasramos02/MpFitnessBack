@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-
+/* Classe com comentarios necessarios que ajudam outro programador que ira entrar no projeto futaramente parabens ! */
 @Slf4j
 @Component
 @RequiredArgsConstructor

@@ -20,6 +20,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
+/* Esta controller está muito grande seria uma boa prática dividir em outras controllers exemplo:
+ * - PedidoClienteController: para lidar com endpoints relacionados a pedidos feitos por clientes (finalizar compra, listar pedidos do cliente, detalhar pedido do cliente)
+ * - PedidoAdminController: para lidar com endpoints administrativos relacionados a pedidos (listar todos os pedidos, atualizar status, adicionar rastreamento, etc)
+ * - RelatorioPedidoController: para lidar com endpoints relacionados a relatórios de pedidos (vendas totais, contagem por status)
+ * Isso também facilitaria a manutenção e a leitura do código, além de seguir o princípio de responsabilidade única.
+ */
 @RestController
 @RequestMapping("/api/pedidos")
 @RequiredArgsConstructor

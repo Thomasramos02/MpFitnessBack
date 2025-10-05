@@ -20,7 +20,11 @@ public class ClienteService {
 
     public Cliente findById(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("id do cliente <UNK> null");
+            throw new IllegalArgumentException("id do cliente <UNK> null"); /*
+            Atualemente, essa verificação pode ser desnecessária, pois o método findById do JpaRepository já lida com nulls.
+            E também seria bom lançar uma exeção mais especifica, como throw new IllegalArgumentException("id do cliente não pode ser nulo")
+            
+            */
         }
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("id do cliente <UNK> null"));
@@ -62,6 +66,25 @@ public class ClienteService {
     cliente.setSenha(passwordEncoder.encode(novaSenha));
     clienteRepository.save(cliente);
 }
+
+
+/* Faltou o método atualizarConta, para manter a toda a lógica na services por exemplo
+ * public Cliente atualizarConta(Long id, Cliente clienteAtualizado) {
+ *   Cliente clienteExistente = findById(id);
+ *  clienteExistente.setNome(clienteAtualizado.getNome());
+ * clienteExistente.setEmail(clienteAtualizado.getEmail());
+ * clienteExistente.setEndereco(clienteAtualizado.getEndereco());
+ * clienteExistente.setTelefone(clienteAtualizado.getTelefone());
+ * return clienteRepository.save(clienteExistente);
+ */
+
+
+ /*Faltou o método excluirCliente, para manter toda a lógica de negócios na services por exemplo
+  * public void excluirCliente(Long id) {
+  *   Cliente clienteExistente = findById(id);
+    *   clienteRepository.delete(clienteExistente);
+    * }
+  */
 
 
 }

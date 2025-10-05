@@ -32,6 +32,8 @@ public class CarrinhoController {
             String tokenLimpo = token.startsWith("Bearer ") ? token.substring(7) : token;
             Long userId = jwtUtils.extractId(tokenLimpo);
 
+            /* Acima vemos que o token está sendo extraído diretamente da controller seria melhor colocar esse método na services ou um método para centralizar a validação e extração do usuário */
+
             if (userId == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Token inválido ou expirado");
