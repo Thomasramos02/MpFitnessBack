@@ -22,7 +22,7 @@ public class Endereco {
     private String cidade;
 
     private String estado;
-
+    /*Ná variavel String cep eu acho que uma boa decisão seria usar @Size(min = 8, max = 8) já que isso preveniria o usuário de colocar um cep que existem mais caracteres que o permitido exemplo: Se um usuário digitar o cep dessa forma 11111-111 é um formato válido pois existe 8 números + o hífen que da 9 caracteres, se não especificar a quantidade permitida o usuário pode sem querer cometendo um erro e digitando um número com mais caracteres 11111-1111*/
     private String cep;
 
     private String pais;

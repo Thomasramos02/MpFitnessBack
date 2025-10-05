@@ -17,6 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+// @Builder poderia ter sido utilizado, para manter a imutabilidade das variaveis: tipoOferta, categoria, status, emOferta
 @Entity
 @Data
 @NoArgsConstructor
