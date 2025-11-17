@@ -52,13 +52,9 @@ public class ProdutoController {
     @GetMapping("/categorias")
     public ResponseEntity<List<String>> getCategorias() {
         List<String> categorias = Arrays.asList(
-                "Equipamentos",
-                "Suplementos",
-                "Acessórios",
-                "Roupas",
-                "Calçados",
-                "Bebidas",
-                "Snacks",
+                "Biomateriais",
+                "Outros",
+                "OPME",
                 "Geral");
         return ResponseEntity.ok(categorias);
     }

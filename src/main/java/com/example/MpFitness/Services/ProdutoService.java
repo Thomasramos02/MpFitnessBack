@@ -124,7 +124,6 @@ public class ProdutoService {
         existente.setImg(novo.getImg());
         existente.setQuantidade(novo.getQuantidade());
         existente.setValor(novo.getValor());
-        existente.setTamanho(novo.getTamanho());
         existente.setTipoProduto(novo.getTipoProduto());
         existente.setEmOferta(novo.getEmOferta());
         existente.setValorPromocional(novo.getValorPromocional());

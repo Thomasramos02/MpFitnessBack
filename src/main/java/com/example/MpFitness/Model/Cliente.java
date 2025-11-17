@@ -30,6 +30,9 @@ public class Cliente {
     @Column(name = "senha_cliente", length = 60, nullable = true)
     private String senha;
 
+    @Column(name = "cpf_cliente", length = 14, nullable = false, unique = true)
+    private String cpf;
+
     // Google
     @Column(name = "telefone_cliente", length = 15, nullable = true)
     private String telefone;

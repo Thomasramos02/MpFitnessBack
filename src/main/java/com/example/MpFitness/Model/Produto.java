@@ -45,8 +45,6 @@ public class Produto {
     @Column(name = "quant_produto", nullable = false)
     private int quantidade;
 
-    @Column(name = "tam_produto")
-    private String tamanho;
 
     @Column(name = "tipo_produto", length = 20)
     private String tipoProduto = "UNICO"; // valores possíveis: "UNICO", "COMBO"
