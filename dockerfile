@@ -1,9 +1,9 @@
 # Stage 1: Build
 FROM ubuntu:22.04 AS build
 
-# Instalar OpenJDK e Maven
+# Instalar OpenJDK 17 e Maven
 RUN apt-get update && \
-    apt-get install -y openjdk-20-jdk maven && \
+    apt-get install -y openjdk-17-jdk maven && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -13,7 +13,7 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 # Stage 2: Runtime
-FROM openjdk:20-jdk-slim
+FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 EXPOSE 8080
