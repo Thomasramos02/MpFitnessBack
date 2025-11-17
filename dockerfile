@@ -1,22 +1,23 @@
 # Stage 1: Build
-FROM ubuntu:latest AS build
-
-RUN apt-get update && apt-get install -y openjdk-21-jdk maven && rm -rf /var/lib/apt/lists/*
+FROM eclipse-temurin:21-jdk-jammy AS build
 
 WORKDIR /app
 COPY . .
-
-RUN mvn clean install -DskipTests
+RUN chmod +x mvnw
+RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Runtime
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 WORKDIR /app
+
+# Criar usuário não-root para segurança (importante para Render)
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN chown -R appuser:appuser /app
+USER appuser
+
 EXPOSE 8080
 
-COPY --from=build /app/target/MpFitness-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=build /app/target/MpFitness-0.0.1-SNAPSHOT.jar app.jar
 
-# NÃO defina variáveis sensíveis aqui!
-# Elas devem ser passadas pelo ambiente de execução (Render, Docker Compose, etc)
-
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
