@@ -1,22 +1,25 @@
 # Stage 1: Build
-FROM ubuntu:latest AS build
+FROM ubuntu:22.04 AS build
 
-RUN apt-get update && apt-get install -y openjdk-21-jdk maven && rm -rf /var/lib/apt/lists/*
+# Instalar OpenJDK e Maven
+RUN apt-get update && \
+    apt-get install -y openjdk-20-jdk maven && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY . .
 
+# Build do projeto Java (Spring Boot)
 RUN mvn clean install -DskipTests
 
 # Stage 2: Runtime
-FROM openjdk:21-jdk-slim
+FROM openjdk:20-jdk-slim
 
 WORKDIR /app
 EXPOSE 8080
 
+# Copiar o JAR compilado
 COPY --from=build /app/target/MpFitness-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# NÃO defina variáveis sensíveis aqui!
-# Elas devem ser passadas pelo ambiente de execução (Render, Docker Compose, etc)
-
+# ENTRYPOINT para rodar a aplicação
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
