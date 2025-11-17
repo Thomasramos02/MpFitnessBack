@@ -9,7 +9,7 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 # Stage 2: Runtime
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk-jammy
 
 WORKDIR /app
 EXPOSE 8080
