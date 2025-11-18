@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/api/pedidos/*/status")).hasRole("ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/api/pedidos/*/cancelar")).hasRole("ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/api/clientes/**")).authenticated()
+                        .requestMatchers("/api/relatorios/**","/api/pedidos/relatorios/**" ).hasRole("ADMIN")
                         .requestMatchers("/api/payments/**").authenticated()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
@@ -103,7 +104,7 @@ public class SecurityConfig {
                 "https://mp-fitness-front.vercel.app",
                 frontendUrl 
         ));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
     
