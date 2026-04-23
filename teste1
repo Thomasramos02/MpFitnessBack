@@ -1,0 +1,193 @@
+# Alterações Implementadas (Recorte)
+
+## Pedido.java
+
+```java
+public double valorFinal() {
+    double valorPedido = 0;
+    BigDecimal valorPedidoBD;
+
+    for (int i = 0; i < quantItens; i++) {
+        valorPedido += itens[i].getPrecoVenda() * itens[i].getQuantidade();
+    }
+
+    if (formaDePagamento == 1) {
+        valorPedido *= (1.0 - DESCONTO_PG_A_VISTA);
+    }
+
+    valorPedidoBD = BigDecimal.valueOf(valorPedido).setScale(2, RoundingMode.HALF_UP);
+    return valorPedidoBD.doubleValue();
+}
+
+public double valorCatalogoAtual() {
+    double soma = 0;
+    BigDecimal somaBD;
+
+    for (int i = 0; i < quantItens; i++) {
+        soma += itens[i].getProduto().valorDeVenda() * itens[i].getQuantidade();
+    }
+
+    somaBD = BigDecimal.valueOf(soma).setScale(2, RoundingMode.HALF_UP);
+    return somaBD.doubleValue();
+}
+
+public double indiceEconomia() {
+    double economia = valorCatalogoAtual() - valorFinal();
+    BigDecimal economiaBD = BigDecimal.valueOf(economia).setScale(2, RoundingMode.HALF_UP);
+    return economiaBD.doubleValue();
+}
+```
+
+## ComparadorCriterioA.java
+
+```java
+@Override
+public int compare(Pedido o1, Pedido o2) {
+    int resultado = Double.compare(o1.valorFinal(), o2.valorFinal());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    resultado = Integer.compare(o1.getTotalItens(), o2.getTotalItens());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    return Integer.compare(o1.getIdPrimeiroProduto(), o2.getIdPrimeiroProduto());
+}
+```
+
+## ComparadorCriterioB.java
+
+```java
+@Override
+public int compare(Pedido o1, Pedido o2) {
+    int resultado = Integer.compare(o1.getTotalItens(), o2.getTotalItens());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    resultado = o1.getDataPedido().compareTo(o2.getDataPedido());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    return Integer.compare(o1.getIdPedido(), o2.getIdPedido());
+}
+```
+
+## ComparadorCriterioC.java
+
+```java
+@Override
+public int compare(Pedido o1, Pedido o2) {
+    int resultado = Double.compare(o2.indiceEconomia(), o1.indiceEconomia());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    resultado = Double.compare(o1.valorFinal(), o2.valorFinal());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    return Integer.compare(o1.getIdPedido(), o2.getIdPedido());
+}
+```
+
+## ComparadorPorValor.java
+
+```java
+@Override
+public int compare(Pedido o1, Pedido o2) {
+    int resultado = Double.compare(o1.valorFinal(), o2.valorFinal());
+    if (resultado != 0) {
+        return resultado;
+    }
+
+    return Integer.compare(o1.getIdPedido(), o2.getIdPedido());
+}
+```
+
+## App.java
+
+### localizarPedidosPremium()
+
+```java
+if (valorCorte == null) {
+    System.out.println("Valor inválido!");
+    return;
+}
+
+if (pedidosOrdenadosPorValor == null || pedidosOrdenadosPorValor.length == 0) {
+    System.out.println("Não há pedidos cadastrados.");
+    return;
+}
+
+int esquerda = 0;
+int direita = pedidosOrdenadosPorValor.length - 1;
+int primeiroIndiceValido = -1;
+
+while (esquerda <= direita) {
+    int meio = esquerda + (direita - esquerda) / 2;
+    double valorMeio = pedidosOrdenadosPorValor[meio].valorFinal();
+
+    if (valorMeio >= valorCorte) {
+        primeiroIndiceValido = meio;
+        direita = meio - 1;
+    } else {
+        esquerda = meio + 1;
+    }
+}
+
+if (primeiroIndiceValido == -1) {
+    System.out.println("Nenhum pedido premium encontrado para o valor de corte informado.");
+    return;
+}
+
+System.out.println("\nPedidos premium encontrados:\n");
+for (int i = primeiroIndiceValido; i < pedidosOrdenadosPorValor.length; i++) {
+    System.out.println(pedidosOrdenadosPorValor[i]);
+    System.out.println();
+}
+```
+
+### ordenarPedidos()
+
+```java
+switch (opcao) {
+    case 1 -> ordenador = new Bubblesort<>();
+    case 2 -> ordenador = new InsertionSort<>();
+    case 3 -> ordenador = new SelectionSort<>();
+    case 4 -> ordenador = new Mergesort<>();
+    case 5 -> ordenador = new Heapsort<>();
+    default -> {
+        System.out.println("Opção de algoritmo inválida!");
+        return;
+    }
+}
+
+switch (opcao) {
+    case 1:
+        ordenador.setComparador(new ComparadorCriterioA());
+        pedidosCadastrados = ordenador.ordenar(pedidosCadastrados);
+        break;
+    case 2:
+        ordenador.setComparador(new ComparadorCriterioB());
+        pedidosCadastrados = ordenador.ordenar(pedidosCadastrados);
+        break;
+    case 3:
+        ordenador.setComparador(new ComparadorCriterioC());
+        pedidosCadastrados = ordenador.ordenar(pedidosCadastrados);
+        break;
+    default:
+        System.out.println("Critério inválido!");
+        ordenador = null;
+        return;
+}
+
+pedidosOrdenadosPorValor = Arrays.copyOf(pedidosCadastrados, quantPedidos);
+IOrdenator<Pedido> ordenadorValor = new Heapsort<>();
+ordenadorValor.setComparador(new ComparadorCriterioA());
+pedidosOrdenadosPorValor = ordenadorValor.ordenar(pedidosOrdenadosPorValor);
+```
