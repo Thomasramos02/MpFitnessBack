@@ -1,0 +1,16 @@
+MpFitnessBack/target/
+MpFitnessBack/.mvn/
+MpFitnessBack/.idea/
+MpFitnessBack/.vscode/
+MpFitnessBack/node_modules/
+MpFitnessReact/node_modules/
+MpFitnessReact/.next/
+MpFitnessReact/build/
+MpFitnessReact/.env.local
+.git/
+.github/
+.gitignore
+logs/
+uploads/
+*.log
+*.md
