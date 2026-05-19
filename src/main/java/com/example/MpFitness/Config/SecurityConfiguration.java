@@ -62,6 +62,7 @@ public class SecurityConfiguration {
                                                                 "/api/auth/forgot-password",
                                                                 "/api/auth/reset-password",
                                                                 "/uploads/**",
+                                                                "/api/public/health",
                                                                 "/actuator/health",
                                                                 "/actuator/health/**",
                                                                 "/actuator/info")

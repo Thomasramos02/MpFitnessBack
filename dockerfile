@@ -1,3 +1,4 @@
+
 # Build stage
 # Use Eclipse Temurin JDK 23 (official, disponível no Docker Hub)
 FROM eclipse-temurin:23-jdk as build
