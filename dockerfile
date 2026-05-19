@@ -9,13 +9,10 @@ WORKDIR /app
 
 # Copy only the files needed for Maven build
 COPY pom.xml ./
-COPY mvnw ./
-COPY .mvn ./.mvn/
 COPY src ./src/
 
-# Build the application
-RUN chmod +x ./mvnw && \
-    ./mvnw clean package -DskipTests -q
+# Build the application using the system Maven installed above
+RUN mvn -B -DskipTests clean package -q
 
 # Final stage
 # Runtime stage
