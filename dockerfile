@@ -1,5 +1,6 @@
 # Build stage
-FROM openjdk:23-slim as build
+# Use Eclipse Temurin JDK 23 (official, disponível no Docker Hub)
+FROM eclipse-temurin:23-jdk as build
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
@@ -17,7 +18,8 @@ RUN chmod +x ./mvnw && \
     ./mvnw clean package -DskipTests -q
 
 # Final stage
-FROM openjdk:23-slim
+# Runtime stage
+FROM eclipse-temurin:23-jdk
 
 WORKDIR /app
 
