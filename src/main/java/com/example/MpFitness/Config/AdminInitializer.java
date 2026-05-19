@@ -24,21 +24,23 @@ public class AdminInitializer implements CommandLineRunner {
 
     public AdminInitializer(ClienteRepository clienteRepository,
             PasswordEncoder passwordEncoder,
-            @Value("${ADMIN_INITIAL_EMAIL:admin@mpfitness.com}") String adminInitialEmail,
-            @Value("${ADMIN_INITIAL_PASSWORD:Admin@123}") String adminInitialPassword) {
+            @Value("${ADMIN_INITIAL_EMAIL:}") String adminInitialEmail,
+            @Value("${ADMIN_INITIAL_PASSWORD:}") String adminInitialPassword) {
         this.clienteRepository = clienteRepository;
         this.passwordEncoder = passwordEncoder;
-        this.adminInitialEmail = (adminInitialEmail == null || adminInitialEmail.isBlank())
-                ? "admin@mpfitness.com"
-                : adminInitialEmail.trim().toLowerCase();
-        this.adminInitialPassword = (adminInitialPassword == null || adminInitialPassword.isBlank())
-                ? "Admin@123"
-                : adminInitialPassword;
+        this.adminInitialEmail = adminInitialEmail == null ? "" : adminInitialEmail.trim().toLowerCase();
+        this.adminInitialPassword = adminInitialPassword == null ? "" : adminInitialPassword;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
+        if (adminInitialEmail.isBlank() || adminInitialPassword.isBlank()) {
+            log.info(
+                    "⏭️ Bootstrap de admin desativado. Configure ADMIN_INITIAL_EMAIL e ADMIN_INITIAL_PASSWORD para habilitar.");
+            return;
+        }
+
         final String adminEmail = adminInitialEmail;
         final String encodedPassword = passwordEncoder.encode(adminInitialPassword);
 
@@ -60,7 +62,6 @@ public class AdminInitializer implements CommandLineRunner {
                     existingAdmin.setSenha(encodedPassword);
                     updated = true;
                 } else if (!passwordEncoder.matches(adminInitialPassword, existingAdmin.getSenha())) {
-                    // Mantem a credencial de bootstrap consistente para ambientes locais.
                     existingAdmin.setSenha(encodedPassword);
                     updated = true;
                 }

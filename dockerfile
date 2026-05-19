@@ -35,5 +35,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD java -cp /app/MpFitness.jar org.springframework.boot.loader.JarLauncher
 
-# Run the application with prod profile
-ENTRYPOINT ["java", "-jar", "MpFitness.jar", "--spring.profiles.active=prod"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "MpFitness.jar"]
