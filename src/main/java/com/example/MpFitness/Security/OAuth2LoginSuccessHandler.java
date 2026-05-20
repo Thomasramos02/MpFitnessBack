@@ -53,11 +53,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         log.info("Token JWT gerado para o cliente: {}", cliente.getEmail());
 
         Cookie cookie = new Cookie("mpfitness_token", token);
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false); // false para localhost, true em produção
+        boolean production = frontendUrl != null && frontendUrl.startsWith("https://");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(production);
         cookie.setPath("/");
         cookie.setMaxAge(36000); // 10 horas
-        cookie.setAttribute("SameSite", "Strict");
+        cookie.setAttribute("SameSite", production ? "None" : "Lax");
         response.addCookie(cookie);
 
         log.info("Cookie criado com sucesso: {} ", cliente.getEmail());
