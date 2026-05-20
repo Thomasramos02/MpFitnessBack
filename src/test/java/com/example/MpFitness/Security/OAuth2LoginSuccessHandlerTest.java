@@ -45,7 +45,7 @@ class OAuth2LoginSuccessHandlerTest {
         handler.onAuthenticationSuccess(request, response, authentication);
 
         String redirected = response.getRedirectedUrl();
-        assertThat(redirected).startsWith("http://localhost:3000/index.html");
+        assertThat(redirected).startsWith("http://localhost:3000/login");
         assertThat(redirected).contains("token=jwt-token-here");
     }
 }

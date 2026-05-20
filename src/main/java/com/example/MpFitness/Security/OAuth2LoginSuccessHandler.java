@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -62,6 +63,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         log.info("Cookie criado com sucesso: {} ", cliente.getEmail());
 
         clearAuthenticationAttributes(request);
-        getRedirectStrategy().sendRedirect(request, response, frontendUrl);
+        String redirectUrl = UriComponentsBuilder
+                .fromUriString(frontendUrl)
+                .path("/login")
+                .queryParam("token", token)
+                .build(true)
+                .toUriString();
+        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
