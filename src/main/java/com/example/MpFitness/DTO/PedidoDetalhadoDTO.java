@@ -1,7 +1,7 @@
 package com.example.MpFitness.DTO;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.example.MpFitness.Model.Endereco;
@@ -14,7 +14,7 @@ import lombok.Data;
 public class PedidoDetalhadoDTO {
     private Long id;
     private String status;
-    private LocalDateTime dataCompra;
+    private OffsetDateTime dataCompra;
     private String formaEntrega;
     private BigDecimal valorTotal;
     private List<ProdutoResumoDTO> produtos;
@@ -22,9 +22,9 @@ public class PedidoDetalhadoDTO {
     private ClientePedidoDTO cliente;
     private String observacoes;
     private String codigoRastreamento;
-    private LocalDateTime dataEntregaPrevista;
+    private OffsetDateTime dataEntregaPrevista;
     private String preferenciaPagamentoId;
     private String preferenciaInitPoint;
     private String preferenciaSandboxInitPoint;
-    private LocalDateTime dataExpiracaoReserva;
+    private OffsetDateTime dataExpiracaoReserva;
 }

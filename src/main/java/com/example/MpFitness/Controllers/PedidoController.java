@@ -7,7 +7,7 @@ import com.example.MpFitness.Model.Pedido.StatusPedido;
 import com.example.MpFitness.Services.PedidoService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -73,8 +73,8 @@ public class PedidoController {
     @GetMapping("/periodo")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Pedido>> listarPedidosPorPeriodo(
-            @RequestParam LocalDateTime inicio,
-            @RequestParam LocalDateTime fim) {
+            @RequestParam OffsetDateTime inicio,
+            @RequestParam OffsetDateTime fim) {
         List<Pedido> pedidos = pedidoService.listarPedidosPorPeriodo(inicio, fim);
         return ResponseEntity.ok(pedidos);
     }
@@ -134,8 +134,8 @@ public class PedidoController {
     @GetMapping("/relatorios/vendas-totais")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BigDecimal> calcularVendasTotais(
-            @RequestParam LocalDateTime inicio,
-            @RequestParam LocalDateTime fim) {
+            @RequestParam OffsetDateTime inicio,
+            @RequestParam OffsetDateTime fim) {
         BigDecimal total = pedidoService.calcularTotalVendasPorPeriodo(inicio, fim);
         return ResponseEntity.ok(total);
     }

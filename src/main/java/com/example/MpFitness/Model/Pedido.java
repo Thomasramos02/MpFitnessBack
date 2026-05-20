@@ -1,7 +1,7 @@
 package com.example.MpFitness.Model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +42,10 @@ public class Pedido {
     private BigDecimal valorTotal;
 
     @Column(name = "data_compra", nullable = false)
-    private LocalDateTime dataCompra;
+    private OffsetDateTime dataCompra;
 
     @Column(name = "data_atualizacao")
-    private LocalDateTime dataAtualizacao;
+    private OffsetDateTime dataAtualizacao;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_pedido", nullable = false)
@@ -74,13 +74,13 @@ public class Pedido {
     private String pagamentoExternoId;
 
     @Column(name = "data_pagamento_aprovado")
-    private LocalDateTime dataPagamentoAprovado;
+    private OffsetDateTime dataPagamentoAprovado;
 
     @Column(name = "data_entrega_prevista")
-    private LocalDateTime dataEntregaPrevista;
+    private OffsetDateTime dataEntregaPrevista;
 
     @Column(name = "data_expiracao_reserva")
-    private LocalDateTime dataExpiracaoReserva;
+    private OffsetDateTime dataExpiracaoReserva;
 
     @Embedded
     private Endereco enderecoEntrega;

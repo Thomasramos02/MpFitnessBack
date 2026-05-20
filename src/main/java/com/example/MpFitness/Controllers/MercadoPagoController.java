@@ -17,7 +17,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
@@ -69,7 +70,8 @@ public class MercadoPagoController {
 
             if (pedido.getDataExpiracaoReserva() != null) {
                 builder.expires(true)
-                        .expirationDateTo(pedido.getDataExpiracaoReserva().atOffset(java.time.ZoneOffset.of("-03:00")));
+                        .expirationDateTo(pedido.getDataExpiracaoReserva()
+                                .withOffsetSameInstant(ZoneOffset.of("-03:00")));
             }
 
             PreferenceRequest preferenceRequest = builder.build();
@@ -294,6 +296,6 @@ public class MercadoPagoController {
     @Data
     static class ErrorResponse {
         private final String message;
-        private final LocalDateTime timestamp = LocalDateTime.now();
+        private final OffsetDateTime timestamp = OffsetDateTime.now(ZoneOffset.UTC);
     }
 }

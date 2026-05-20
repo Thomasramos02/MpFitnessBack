@@ -26,8 +26,8 @@ import com.example.MpFitness.Services.OrderConfirmationEmailService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +83,7 @@ public class PedidoService {
         return pedidoRepository.findByClienteId(clienteId);
     }
 
-    public List<Pedido> listarPedidosPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+    public List<Pedido> listarPedidosPorPeriodo(OffsetDateTime inicio, OffsetDateTime fim) {
         return pedidoRepository.findByDataCompraBetween(inicio, fim);
     }
 
@@ -112,7 +112,7 @@ public class PedidoService {
     public Pedido atualizarStatusPedido(Long pedidoId, StatusPedido novoStatus) {
         Pedido pedido = buscarPedidoPorIdObrigatorio(pedidoId);
         pedido.setStatusPedido(novoStatus);
-        pedido.setDataAtualizacao(LocalDateTime.now());
+        pedido.setDataAtualizacao(OffsetDateTime.now(ZoneOffset.UTC));
         return pedidoRepository.save(pedido);
     }
 
@@ -120,21 +120,21 @@ public class PedidoService {
     public Pedido adicionarCodigoRastreamento(Long pedidoId, String codigoRastreamento) {
         Pedido pedido = buscarPedidoPorIdObrigatorio(pedidoId);
         pedido.setCodigoRastreamento(codigoRastreamento);
-        pedido.setDataAtualizacao(LocalDateTime.now());
+        pedido.setDataAtualizacao(OffsetDateTime.now(ZoneOffset.UTC));
         return pedidoRepository.save(pedido);
     }
 
     @Transactional
-    public Pedido atualizarDataEntrega(Long pedidoId, LocalDateTime dataEntregaPrevista) {
+    public Pedido atualizarDataEntrega(Long pedidoId, OffsetDateTime dataEntregaPrevista) {
         Pedido pedido = buscarPedidoPorIdObrigatorio(pedidoId);
         pedido.setDataEntregaPrevista(dataEntregaPrevista);
-        pedido.setDataAtualizacao(LocalDateTime.now());
+        pedido.setDataAtualizacao(OffsetDateTime.now(ZoneOffset.UTC));
         return pedidoRepository.save(pedido);
     }
 
     @Transactional
     public Pedido atualizarDataEntrega(Long pedidoId, LocalDate novaData) {
-        return atualizarDataEntrega(pedidoId, novaData.atStartOfDay());
+        return atualizarDataEntrega(pedidoId, novaData.atStartOfDay().atOffset(ZoneOffset.UTC));
     }
 
     @Transactional
@@ -154,15 +154,16 @@ public class PedidoService {
 
         devolverProdutosAoEstoque(pedido);
         pedido.setStatusPedido(StatusPedido.CANCELADO);
-        pedido.setDataAtualizacao(LocalDateTime.now());
-        pedido.setObservacoes("Pedido cancelado pelo sistema em " + LocalDateTime.now());
+        OffsetDateTime agora = OffsetDateTime.now(ZoneOffset.UTC);
+        pedido.setDataAtualizacao(agora);
+        pedido.setObservacoes("Pedido cancelado pelo sistema em " + agora);
 
         return pedidoRepository.save(pedido);
     }
 
     @Transactional
     public void processarExpiracaoReservas() {
-        LocalDateTime now = LocalDateTime.now();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         List<Pedido> expirados = pedidoRepository.findExpiredPrePedidos(now);
 
         for (Pedido pedido : expirados) {
@@ -194,9 +195,9 @@ public class PedidoService {
         pedido.setValorProdutos(valorProdutos);
         pedido.setValorFrete(valorFrete);
         pedido.setValorTotal(valorProdutos.add(valorFrete));
-        pedido.setDataCompra(LocalDateTime.now());
+        pedido.setDataCompra(OffsetDateTime.now(ZoneOffset.UTC));
         pedido.setFormaEntrega(formaEntrega);
-        pedido.setDataExpiracaoReserva(LocalDateTime.now().plusMinutes(15));
+        pedido.setDataExpiracaoReserva(OffsetDateTime.now(ZoneOffset.UTC).plusMinutes(15));
 
         if (formaEntrega == FormaEntrega.ENTREGA) {
             pedido.setStatusPedido(StatusPedido.PRE_PEDIDO);
@@ -250,7 +251,7 @@ public class PedidoService {
         }));
     }
 
-    public BigDecimal calcularTotalVendasPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+    public BigDecimal calcularTotalVendasPorPeriodo(OffsetDateTime inicio, OffsetDateTime fim) {
         return pedidoRepository.findByDataCompraBetween(inicio, fim).stream()
                 .map(Pedido::getValorTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -320,9 +321,9 @@ public class PedidoService {
         pedido.setPreferenciaInitPoint(initPoint);
         pedido.setPreferenciaSandboxInitPoint(sandboxInitPoint);
         if (pedido.getDataExpiracaoReserva() == null) {
-            pedido.setDataExpiracaoReserva(LocalDateTime.now().plusMinutes(15));
+            pedido.setDataExpiracaoReserva(OffsetDateTime.now(ZoneOffset.UTC).plusMinutes(15));
         }
-        pedido.setDataAtualizacao(LocalDateTime.now());
+        pedido.setDataAtualizacao(OffsetDateTime.now(ZoneOffset.UTC));
         return pedidoRepository.save(pedido);
     }
 
@@ -347,13 +348,15 @@ public class PedidoService {
         }
 
         pedido.setPagamentoExternoId(pagamentoExternoId);
-        pedido.setDataPagamentoAprovado(dataAprovacao != null ? dataAprovacao.toLocalDateTime() : LocalDateTime.now());
+        pedido.setDataPagamentoAprovado(dataAprovacao != null
+                ? dataAprovacao.withOffsetSameInstant(ZoneOffset.UTC)
+                : OffsetDateTime.now(ZoneOffset.UTC));
         pedido.setStatusPedido(StatusPedido.PAGO);
         pedido.setDataExpiracaoReserva(null); // Limpa reserva ao pagar
         pedido.setPreferenciaPagamentoId(null);
         pedido.setPreferenciaInitPoint(null);
         pedido.setPreferenciaSandboxInitPoint(null);
-        pedido.setDataAtualizacao(LocalDateTime.now());
+        pedido.setDataAtualizacao(OffsetDateTime.now(ZoneOffset.UTC));
         Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
         // Enviar email de confirmação de pedido
